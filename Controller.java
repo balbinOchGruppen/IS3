@@ -1,6 +1,7 @@
 import java.util.HashMap;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 public class Controller {
@@ -93,7 +94,7 @@ public class Controller {
 		return order.calculateSum(price);
 	}
 	
-	public void addProductFromOrderLine(String name, String category, double price) {
+	public void addProductFromOrderLine(String name, String category, int price) {
 		Product product = new Product();
 		product.setName(name);
 		product.setCategory(category);
@@ -133,7 +134,7 @@ public class Controller {
 		return c;
 	}
 	
-	public void addProductFromRegister(String name, String category, double price) {
+	public void addProductFromRegister(String name, String category, int price) {
 		Product product = new Product();
 		product.setName(name); 
 		product.setCategory(category);

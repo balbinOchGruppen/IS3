@@ -4,7 +4,7 @@ public class Product {
 
 	private String name;
 	private String category;
-	private double price;
+	private int price;
 	private HashMap<String, OrderLine> orderLines = new HashMap<String, OrderLine>();
 	private HashMap<String, Copy> copy = new HashMap<String, Copy>();
 	private ProductRegister productRegister;
@@ -25,7 +25,7 @@ public class Product {
 		return this.category;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
