@@ -10,7 +10,7 @@ public class CustomerRegister {
 	public HashMap<String, Customer> getCustomers() {
 		return this.customers;
 	}
-
+//A method that searches for a specific customer in the customer register. 
 	public Customer findCustomer(String customerNumber) {
 		 for(Customer c : customers.values()) { 
 			 if(c.getCustomerNumber().equals(customerNumber)) {
@@ -18,11 +18,11 @@ public class CustomerRegister {
 		     }
 	      } return null;
 	}
-
+//A method to add a customer to the customer register.
 	public void addCustomer(Customer customer) {
 		customers.put(customer.getCustomerNumber(), customer); 
 	}
-
+//A method to remove a customer from the customer register.
 	public Customer removeCustomer(String customerNumber) {
 		Customer c = this.findCustomer(customerNumber);
 		if (c.getCustomerNumber().equals(customerNumber)) {
@@ -31,12 +31,12 @@ public class CustomerRegister {
 		}
 		return null;
 	}
-	
-	public HashMap<String, Customer> customersInRegister() {
+
+	/*public HashMap<String, Customer> customersInRegister() {
 		
 		for(Customer c : customers.values()) {
 			customers.put(c.getCustomerNumber(), c);
 			
 		} return customers;
-	}
+	}*/
 }

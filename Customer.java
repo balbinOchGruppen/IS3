@@ -45,7 +45,7 @@ public class Customer {
 	public CustomerRegister getCustomerRegister() {
 		return this.customerRegister;
 	}
-	
+//A method to locate and return a specific customer order.
 	public Order findOrder(String orderID) {
 		for(Order o : orders.values()) {
 			if(o.getOrderID().equals(orderID)) {
@@ -53,11 +53,11 @@ public class Customer {
 			}
 		} return null; 
 	}
-	
+//A method that sets an order to a customer.
 	public void addOrder(Order order) {
 		orders.put(order.getOrderID(), order);
 	}
-	
+//A method that removes an order from a customer.
 	public Order removeOrder(String orderID) {
 		Order o = this.findOrder(orderID);
 		if(o.getOrderID().equals(orderID)) {

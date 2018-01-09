@@ -31,7 +31,7 @@ public class Product {
 		this.price = price;
 	}
 
-	public double getPrice() {
+	public int getPrice() {
 		return this.price;
 	}
 	
@@ -74,7 +74,7 @@ public class Product {
 	public ProductRegister getProductRegister() {
 		return this.productRegister;
 	}
-	
+//A method to locate and return a specific copy of a product.
 	public Copy findCopy(String serialNumber) {
 		for(Copy e : copies.values()) {
 			if(e.getSerialnumber().equals(serialNumber)) {
@@ -82,15 +82,15 @@ public class Product {
 			}
 		} return null; 
 	}
-	
+//A method to add a copy of a product to the product.
 	public void addCopy(Copy copy) {
 		this.copies.put(copy.getSerialnumber(), copy);
-		
+//Increases the amount of copies of a product by one and add them to a product stock.
 		this.amount += 1;
 		this.setAmountOfCopies(amount);
 		this.setAmount(amount);
 	}
-	
+//A method to remove a copy of a product from the product.
 	public Copy removeCopy(String serialNumber) {
 		Copy c = this.findCopy(serialNumber);
 		if(c.getSerialnumber().equals(serialNumber)) {
@@ -99,14 +99,14 @@ public class Product {
 		} return null;
 	}
 	
-	public int getTheProductsCopies() {
+	/*public int getTheProductCopies() {
 		HashMap<String, Copy> allCopies = new HashMap<String, Copy>();
 		for(Copy c : copies.values()) {
 			allCopies.put(c.getSerialnumber(), c);
 			this.amount += 1;
 	    }
 		return amount;	
-	}
+	}*/
 
 
 }

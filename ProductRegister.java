@@ -8,7 +8,7 @@ public class ProductRegister {
 	public HashMap<String, Product> getProducts() {
 		return this.products;
 	}
-	
+//A method to locate and return a specific product from the product register.
 	public Product findProduct(String name) {
 		for(Product p : products.values()) {
 			if(p.getName().equals(name)) {
@@ -16,11 +16,11 @@ public class ProductRegister {
 			}
 		} return null; 
 	}
-	
+//A method to add a product to the product register.
 	public void addProduct(Product product) {
 		products.put(product.getName(), product);
 	}
-	
+//A method to locate and remove a product from the product register.
 	public Product removeProduct(String name) {
 		Product p = this.findProduct(name);
 		if(p.getName().equals(name)) {
@@ -28,7 +28,7 @@ public class ProductRegister {
 			return p;
 		} return null;
 	}
-	
+
 	public HashMap<String, Product> productsInRegister() {
 		
 		for(Product p : products.values()) {

@@ -35,20 +35,30 @@ public class OrderLine {
 	public Product getProduct() {
 		return this.product;
 	}
-
+//A method that locates and returns an order lines set product.
 	public Product findProduct(String name) {
 		if(product.getName().equals(name)) {
 			return getProduct();
 		} return null;
 	}
-	
+//A method to add a product to an order line.
 	public void addProduct(Product product) {
 		this.setProduct(product);
 	}
-	
+//A method to remove a product from an order line.
 	public Product removeProduct(String name) {
 		Product p = this.findProduct(name);
 		p = null;
 		return p;
 	} 
+//A method to calculate the total price for the copies of a product in an order line. 
+	public double calculateOrderLine() {
+		double sum = 0;
+		int price = product.getPrice();
+		sum = (this.amount) * price;
+		return sum;
+		
+	}
+	
+	
 }

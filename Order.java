@@ -30,7 +30,7 @@ public class Order {
 	public HashMap<String, OrderLine> getOrderLines() {
 		return this.orderLines;
 	}
-	
+//A method that returns an orders order line.
 	public OrderLine findOrderLine(String number) {
 		for(OrderLine o : orderLines.values()) {
 			if(o.getNumber().equals(number)) {
@@ -38,11 +38,11 @@ public class Order {
 			}
 		} return null; 
 	}
-	
+//A method that adds an order line to an order.
 	public void addOrderLine(OrderLine orderLine) {
 		orderLines.put(orderLine.getNumber(), orderLine);
 	}
-	
+//A method that removes an order line from an order.
 	public OrderLine removeOrderLine(String number) {
 		OrderLine o = this.findOrderLine(number);
 		if(o.getNumber().equals(number)) {
@@ -50,15 +50,17 @@ public class Order {
 			return o;
 		} return null;
 	}
-	
+//A method that calculates the total sum for a specific order.
 	public double calculateSum() {
 		double totalSum = 0;
-		for(OrderLine o : this.orderLines.values()) {
-			if(o != null) {
-				for(Product p : o.getProduct().getProductRegister().getProducts().values()) {
-					totalSum += (p.getPrice() * o.getAmount());
-				} 
-			}
-		}return totalSum;
-	}
-}
+		Order or = customer.findOrder(orderID);
+		if(or != null) {
+			
+		   for(OrderLine o : this.orderLines.values()) {
+			   if(o.getProduct() != null) {
+				   totalSum += o.calculateOrderLine();
+			   }  
+		   } 
+		} return totalSum;
+    }
+} 

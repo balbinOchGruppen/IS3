@@ -106,8 +106,9 @@ public class Applikation {
 		frame.getContentPane().add(messageBox);
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setBounds(333, 334, 505, 247);
+		textPane.setBounds(330, 332, 505, 154);
 		frame.getContentPane().add(textPane);
+		textPane.setEditable(false);
 
 		JButton btnCreatCustomer = new JButton("Skapa");
 		btnCreatCustomer.addActionListener(new ActionListener() {
@@ -207,12 +208,15 @@ public class Applikation {
 				else if (!name.isEmpty() && address.isEmpty()) {
 					c.setName(name);
 					txtCustomerName.setText("");
-					messageBox.setText("Kund med kundnummer: " + customerNbr + " är ändrad.");
+					messageBox.setText("Kundens namn med kundnummer " + customerNbr + " är ändrat.");
 				}
 				else if (!address.isEmpty() && name.isEmpty()) {
 					c.setAddress(address);
-					messageBox.setText("Kund med kundnummer: " + customerNbr + " är ändrad.");
+					messageBox.setText("Kundens adress med kundnummer: " + customerNbr + " är ändrad.");
 					txtCustomerAddress.setText("");
+				}
+				else if(address.isEmpty() && name.isEmpty()) {
+					messageBox.setText("Namn och/eller adress måste fyllas i för att ändra kunden.");
 				}
 				else if (c != null) {
 					c.setName(name);
@@ -238,10 +242,11 @@ public class Applikation {
 				
 				String name = txtProductName.getText();
 				String category = txtProductCategory.getText();
-				int price = Integer.parseInt(txtProductPrice.getText());
+				String stringPrice = txtProductPrice.getText();
+				//int price = Integer.parseInt(txtProductPrice.getText());
 				Product p = controller.findProduct(name);
 				
-				if (name.isEmpty() || category.isEmpty() || !txtProductPrice.contains(1,2) || !txtProductPrice.contains(3,4) || !txtProductPrice.contains(5,6) || !txtProductPrice.contains(7,8) || !txtProductPrice.contains(9,0)) {
+				if (name.isEmpty() || category.isEmpty() || stringPrice.isEmpty()) {
 					messageBox.setText("Du måste fylla i alla fält.");
 				}
 
@@ -250,6 +255,7 @@ public class Applikation {
 				} 
 				
 				else {
+					int price = Integer.parseInt(stringPrice);
 					controller.addProduct(name, category, price);
 					messageBox.setText(name + " är tillagd i produktregistret.");
 					txtProductName.setText("");
@@ -302,7 +308,7 @@ public class Applikation {
 					textPane.setText("Produkten du söker är " + p.getName() + " inom kategorin " + p.getCategory() + " med priset " + p.getPrice() + ", Antal i lager: " + p.getAmountOfCopies());
 					txtProductName.setText("");
 				} else {
-					messageBox.setText("Kunden gick inte att hitta.");
+					messageBox.setText("Produkten gick inte att hitta.");
 					txtProductName.setText("");
 				}
 				
@@ -317,24 +323,30 @@ public class Applikation {
 				
 				String name = txtProductName.getText();
 				String category = txtProductCategory.getText();
-				int price = Integer.parseInt(txtProductPrice.getText());
+				String stringPrice = txtProductPrice.getText();
 				Product p = controller.findProduct(name);
 				
 				if (name.isEmpty()) {
 					messageBox.setText("Du måste fylla i produktnamn.");
 				}
-				else if (!category.isEmpty()) {
-					p.setName(name);
+				else if (!category.isEmpty() && stringPrice.isEmpty()) {
+					p.setCategory(category);
 					txtProductCategory.setText("");
-					messageBox.setText("Produkten " + name + " är ändrad.");
+					messageBox.setText("Produkten " + name + "s kategori är ändrad.");
 				}
-				else if (!txtProductPrice.contains(1,2) || !txtProductPrice.contains(3,4) || !txtProductPrice.contains(5,6) || !txtProductPrice.contains(7,8) || !txtProductPrice.contains(9,0)) {
+				else if (!stringPrice.matches("[0-9]+") && !(stringPrice.length() > 1) && category.isEmpty()) {
+					int price = Integer.parseInt(stringPrice);
 					p.setPrice(price);
-					messageBox.setText("Produkten " + name + " är ändrad.");
+					messageBox.setText("Produkten " + name + "s pris är ändrad.");
 					txtProductPrice.setText("");
 				}
+				else if(category.isEmpty() && stringPrice.isEmpty()) {
+					messageBox.setText("Du måste fylla i kategori och /eller pris.");
+				}
+				
 				else if (p != null) {
 					p.setCategory(category);
+                    int price = Integer.parseInt(stringPrice);
 					p.setPrice(price);
 					txtProductName.setText("");
 					txtProductCategory.setText("");
@@ -421,22 +433,20 @@ public class Applikation {
 					messageBox.setText("Ordern hittades inte.");
 				}
 				else if (customerNbr.isEmpty() || orderID.isEmpty()) {
-					messageBox.setText("Du måste fylla i kundnummer och orderID.");
+					messageBox.setText("Du måste fylla i orderID.");
 				}
 				
 				else {
 					if(o != null) {
-						String answere = o.getCustomer().getName() + " " + o.getCustomer().getCustomerNumber();
+						String answere = ("Namn: " + o.getCustomer().getName() + " Kundnummer: " + o.getCustomer().getCustomerNumber());
 						for(OrderLine ol : o.getOrderLines().values()) {
-							answere += ("\nProdukt: " + ol.getProduct().getName() + " Antal: " + ol.getAmount());
+							answere += ("\nProdukt: " + ol.getProductName() + " Antal: " + ol.getAmount());
 					    }
-					answere += ("\nTotalbelopp: " + controller.calculateAmount());
-					textPane.setText(answere);	
+					String string = ("\nTotalbelopp: " + controller.calculateSum(orderID, customerNbr));
+					textPane.setText(answere + string);	
 					
 				    }
 				}
-				
-				
 			}
 		});
 		btnShow.setBounds(221, 400, 97, 25);
@@ -556,18 +566,15 @@ public class Applikation {
 				String orderID = txtOrderID.getText();
 				String orderLineNbr = txtOrderLineNbr.getText();
 				String productName = txtProduct.getText();
-				int amount = Integer.parseInt(txtAmount.getText());
-				String stringAmount = Integer.toString(amount);
+				String stringAmount = txtAmount.getText();
 				Customer c = controller.findCustomer(customerNbr);
 				Order o = controller.findOrder(orderID, customerNbr);
 				OrderLine ol = controller.findOrderLine(orderLineNbr, orderID, customerNbr);
-				ProductRegister reg = ol.getProduct().getProductRegister();
 				
-				/*if (customerNbr.isEmpty() || orderID.isEmpty() || orderLineNbr.isEmpty() || !txtOrderLineAmount.contains(1,2) || !txtOrderLineAmount.contains(3,4) || !txtOrderLineAmount.contains(5,6) || !txtOrderLineAmount.contains(7,8) || !txtOrderLineAmount.contains(9,0)) {
-					messageBox.setText("Du måste fylla i alla fält.");
-				}*/
+				Product p = controller.findProduct(productName);
+			//	productRegister = ol.getProduct().getProductRegister();
 				
-				if (customerNbr.isEmpty() || orderID.isEmpty() || orderLineNbr.isEmpty() || stringAmount.isEmpty() || productName.isEmpty()) {
+				if (customerNbr.isEmpty() || orderID.isEmpty() || orderLineNbr.isEmpty() || stringAmount.isEmpty()  || productName.isEmpty()) {
 					messageBox.setText("Du måste fylla i alla fält.");
 				}
 				else if(!controller.fetchCustomer().containsValue(c)) {
@@ -579,12 +586,14 @@ public class Applikation {
 				else if (controller.fetchOrderLine(orderID, customerNbr).containsValue(ol)) {
 					messageBox.setText("En orderrad med ordernummer " + orderLineNbr + " finns redan på ordern.");
 				}
-				else if (controller.findProduct(productName) == null) {
+				/*else if (!controller.product.getName().equals(productName)) {
 					messageBox.setText("Den valda produkten finns inte i produktregistret.");
-				}
-				/*else if (amount > ) {
-					messageBox.setText("Det finns inte tillräckligt med exemplar av den valda produkten i registret.");
+					
 				}*/
+				int amount = Integer.parseInt(stringAmount);
+				if (amount > controller.getAmountOfCopies(productName)) {
+					messageBox.setText("Det finns inte tillräckligt med exemplar av den valda produkten i registret.");
+				}
 				else {
 					controller.addOrderLine(orderLineNbr, productName, amount, orderID, customerNbr);
 					messageBox.setText("Orderraden är tillagd till ordern");
@@ -704,17 +713,17 @@ public class Applikation {
 		
 		JLabel lblFrAtt = new JLabel("* Kundnr kr\u00E4vs f\u00F6r att \u00E4ndra, ta bort eller s\u00F6ka efter kund.");
 		lblFrAtt.setFont(new Font("Tahoma", Font.ITALIC, 13));
-		lblFrAtt.setBounds(299, 601, 499, 47);
+		lblFrAtt.setBounds(329, 496, 499, 47);
 		frame.getContentPane().add(lblFrAtt);
 		
 		JLabel lblFrAtt_1 = new JLabel("* Produktnamn kr\u00E4vs f\u00F6r att \u00E4ndra, ta bort eller s\u00F6ka efter produkt.");
 		lblFrAtt_1.setFont(new Font("Tahoma", Font.ITALIC, 13));
-		lblFrAtt_1.setBounds(299, 632, 391, 16);
+		lblFrAtt_1.setBounds(329, 527, 391, 16);
 		frame.getContentPane().add(lblFrAtt_1);
 		
 		JLabel lblFrAtt_2 = new JLabel("* Kundnr kr\u00E4vs f\u00F6r att l\u00E4gga till och ta bort order.");
 		lblFrAtt_2.setFont(new Font("Tahoma", Font.ITALIC, 13));
-		lblFrAtt_2.setBounds(299, 649, 428, 16);
+		lblFrAtt_2.setBounds(328, 543, 428, 16);
 		frame.getContentPane().add(lblFrAtt_2);
 		
 		JButton btnAllCustomers = new JButton("Visa kundregister");
@@ -746,9 +755,12 @@ public class Applikation {
 				String answere = "Produkter: ";
 				
 				for(Product p : products.values()) {
-					answere += ("\nProduktamn: " + p.getName() + " Kategori: " + p.getCategory() + " Pris: " + p.getPrice()  + "\n\n" + p.getName() + " har följande exemplar med serienummer:");
+					answere += ("\nProduktamn: " + p.getName() + " Kategori: " + p.getCategory() + " Pris: " + p.getPrice()  + "\n\n");
+					if(p.getAmountOfCopies() > 0) {
+						answere += (p.getName() + " har följande serienummer på dess exemplar: ");
+					}
 					for(Copy c : p.getCopies().values()) {
-						answere += ("\n" + c.getSerialnumber());
+						answere += (c.getSerialnumber() + "   ");	
 					}
 				} 
 				textPane.setText(answere);
@@ -768,7 +780,7 @@ public class Applikation {
 		
 		JLabel lblNewLabel = new JLabel("* Kundnr och orderID kr\u00E4vs f\u00F6r att l\u00E4gga till och ta bort orderrad.");
 		lblNewLabel.setFont(new Font("Tahoma", Font.ITALIC, 13));
-		lblNewLabel.setBounds(299, 665, 442, 16);
+		lblNewLabel.setBounds(329, 560, 442, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
 	
