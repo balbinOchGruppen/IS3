@@ -28,5 +28,13 @@ public class ProductRegister {
 			return p;
 		} return null;
 	}
+	
+	public HashMap<String, Product> productsInRegister() {
+		
+		for(Product p : products.values()) {
+			products.put(p.getName(), p);
+			
+		} return products;
+	}
 }
 

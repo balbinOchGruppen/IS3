@@ -1,5 +1,6 @@
 public class OrderLine {
 	private String number;
+	private String productName;
 	private int amount;
 	private Order order;
 	private Product product;
@@ -9,6 +10,12 @@ public class OrderLine {
 	}
 	public String getNumber() {
 		return this.number;
+	}
+	public void setProductName(String name) {
+		this.productName = name;
+	}
+	public String getProductName() {
+		return this.productName;
 	}
 	public void setAmount(int amount) {
 		this.amount = amount;
@@ -31,7 +38,7 @@ public class OrderLine {
 
 	public Product findProduct(String name) {
 		if(product.getName().equals(name)) {
-			return this.product;
+			return getProduct();
 		} return null;
 	}
 	

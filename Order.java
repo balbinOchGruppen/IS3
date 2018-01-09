@@ -24,10 +24,10 @@ public class Order {
 	public Customer getCustomer() {
 		return this.customer;
 	}
-	public void setOrderLine (HashMap<String, OrderLine> orderLines) {
+	public void setOrderLines (HashMap<String, OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-	public HashMap<String, OrderLine> getOrderLine() {
+	public HashMap<String, OrderLine> getOrderLines() {
 		return this.orderLines;
 	}
 	
@@ -51,15 +51,14 @@ public class Order {
 		} return null;
 	}
 	
-	public double calculateSum(double pris) {
+	public double calculateSum() {
 		double totalSum = 0;
 		for(OrderLine o : this.orderLines.values()) {
 			if(o != null) {
 				for(Product p : o.getProduct().getProductRegister().getProducts().values()) {
-					totalSum += p.getPrice();
-				} return totalSum;
-				
+					totalSum += (p.getPrice() * o.getAmount());
+				} 
 			}
-		}return 0;
+		}return totalSum;
 	}
 }

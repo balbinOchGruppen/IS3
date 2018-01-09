@@ -20,13 +20,8 @@ public class Controller {
 		this.frame = frame;
 	}
 	
-	public CustomerRegister getCustomerRegister() {
-		Customer c = new Customer();
-		return c.getCustomerRegister();
-	}
-	
-	public Customer findCustomerToChange(String cNbr) {
-		return getCustomerRegister().findCustomer(cNbr);
+	public HashMap<String, Customer> customersInRegister() {
+		return cReg.customersInRegister();
 	}
 	
 	public void addCustomer(String cNbr, String name, String address) { 
@@ -34,7 +29,8 @@ public class Controller {
 		customer.setName(name);
 		customer.setCustomerNumber(cNbr);
 		customer.setAddress(address);
-		cReg.läggTillKund(customer);
+		cReg.addCustomer(customer);
+		customer.setCustomerRegister(cReg);
 	}
 
 	public Customer findCustomer(String cNmbr) {
@@ -50,91 +46,116 @@ public class Controller {
 		return c;
 	}
 	
-	public void addOrder(String orderID, String deliveryDate) {
+	public void addOrder(String orderID, String deliveryDate, String customerNbr) {
 		Order order = new Order();
 		order.setOrderID(orderID);
 		order.setDeliveryDate(deliveryDate);
-		customer.addOrder(order);
+		
+		Customer c = cReg.findCustomer(customerNbr);
+		c.addOrder(order);
+		order.setCustomer(c);
 	}
 
-	public Order findOrder(String orderID) {
-		return customer.findOrder(orderID);
+	public Order findOrder(String orderID, String customerNbr) {
+		Customer c = cReg.findCustomer(customerNbr);
+		if(c != null) {
+			Order o = c.findOrder(orderID);
+		    return o;
+		} return null;
+		
 	}
 
-	public void removeOrder(String orderID) {
-			customer.removeOrder(orderID);
+	public void removeOrder(String orderID, String customerNbr) {
+		Customer c = cReg.findCustomer(customerNbr);
+		if (c != null) { 
+			c.removeOrder(orderID);
+		}
 	}
 	
-	public HashMap<String, Order> fetchOrder() {
-		HashMap<String, Order> o = customer.getOrders();
-		return o;
+	public HashMap<String, Order> fetchOrder(String cNbr) {
+		Customer c = cReg.findCustomer(cNbr);
+		if (c != null) {
+			HashMap<String, Order> o = c.getOrders();
+			return o;
+		} return null;
 	}
 	
-	public void addOrderLine(String number, int amount) {
+	public void addOrderLine(String number, String productName, int amount, String orderID, String customerNbr) {
 		OrderLine orderLine = new OrderLine();
 		orderLine.setNumber(number);
+		orderLine.setProductName(productName);
 		orderLine.setAmount(amount);
-		order.addOrderLine(orderLine);
+		
+		Customer c = cReg.findCustomer(customerNbr);
+		Order o = c.findOrder(orderID);
+		o.addOrderLine(orderLine);
+		orderLine.setOrder(o);
 	}
 
-	public OrderLine findOrderLine(String number) {
-		return order.findOrderLine(number);
+	public OrderLine findOrderLine(String number, String orderID, String customerNbr) {
+		Customer c = cReg.findCustomer(customerNbr);
+		if(c!= null) {
+			Order o = c.findOrder(orderID);
+		    OrderLine ol = o.findOrderLine(number);
+		    return ol;
+		} return null;
+		
 	}
 
-	public void removeOrderLine(String number) {
-		order.removeOrderLine(number);
+	public void removeOrderLine(String number, String orderID, String customerNbr) {
+		Customer c = cReg.findCustomer(customerNbr);
+		Order o = c.findOrder(orderID);
+		if(c != null && o != null) {
+			o.removeOrderLine(number);
+		}
 	}
 	
-	public HashMap<String, OrderLine> findOrderLine() {
-		HashMap<String, OrderLine> o = order.getOrderLine();
-		return o;
+	public HashMap<String, OrderLine> fetchOrderLine(String orderID, String customerNbr) {
+		Customer c = cReg.findCustomer(customerNbr);
+		Order o = c.findOrder(orderID);
+		if(c != null && o != null) {
+			HashMap<String, OrderLine> ol = o.getOrderLines();
+		    return ol;
+		} return null;
+		
 	}
 	
-	public double calculateAmount(double price) {
-		return order.calculateSum(price);
+	public double calculateAmount() {
+		return order.calculateSum();
 	}
 	
-	public void addProductFromOrderLine(String name, String category, int price) {
-		Product product = new Product();
-		product.setName(name);
-		product.setCategory(category);
-		product.setPrice(price);
-		orderLine.addProduct(product);
-	}
-
-	public Product findProductFromOrderLine(String name) {
-		return orderLine.findProduct(name);
-	}
-
-	public void removeProductFromOrderLine(String name) {
-			orderLine.removeProduct(name);
-	}
-	
-	public Product fetchProductFromOrderLine() {
-		Product p = orderLine.getProduct();
-		return p;
-	}
-	
-	public void addCopy(String serialNumber) {
+	public void addCopy(String serialNumber, String productName) {
 		Copy copy = new Copy();
 		copy.setSerialNumber(serialNumber);
-		product.addCopy(copy);
+		
+		Product p = pReg.findProduct(productName);
+		p.addCopy(copy);
 	}
 
-	public Copy findCopy(String serialNumber) {
-		return product.findCopy(serialNumber);
+	public Copy findCopy(String serialNumber, String productName) {
+		Product p = pReg.findProduct(productName);
+		if (p != null) {
+			return p.findCopy(serialNumber);
+		} return null;
 	}
 
-	public void removeCopy(String serialNumber) {
-			product.removeCopy(serialNumber);
+	public void removeCopy(String serialNumber, String productName) {
+		Product p = pReg.findProduct(productName);
+		if (p != null) {
+			p.removeCopy(serialNumber);
+		}
 	}
 	
-	public HashMap<String, Copy> fetchCopy() {
-		HashMap<String, Copy> c = product.getCopy();
-		return c;
+	public HashMap<String, Copy> fetchCopy(String productName) {
+		Product p = pReg.findProduct(productName);
+		if(p != null) {
+			HashMap<String, Copy> c = p.getCopies();
+		    return c;
+		} return null;
+		
 	}
 	
-	public void addProductFromRegister(String name, String category, int price) {
+	public void addProduct(String name, String category, int price) {
 		Product product = new Product();
 		product.setName(name); 
 		product.setCategory(category);
@@ -142,17 +163,21 @@ public class Controller {
 		pReg.addProduct(product);
 	}
 
-	public Product findProductFromRegister(String name) {
+	public Product findProduct(String name) {
 		return pReg.findProduct(name);
 	}
 
-	public void removeProductFromRegister(String name) {
+	public void removeProduct(String name) {
 			pReg.removeProduct(name);
 	}
 	
-	public HashMap<String, Product> fetchProductFromRegister() {
+	public HashMap<String, Product> fetchProduct() {
 		HashMap<String, Product> p = pReg.getProducts();
 		return p;
+	}
+	
+	public HashMap<String, Product> productsInRegister() {
+		return pReg.productsInRegister();
 	}
 
 }

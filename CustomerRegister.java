@@ -12,21 +12,14 @@ public class CustomerRegister {
 	}
 
 	public Customer findCustomer(String customerNumber) {
-		
 		 for(Customer c : customers.values()) { 
 			 if(c.getCustomerNumber().equals(customerNumber)) {
 		        return c; 
 		     }
 	      } return null;
-		 
-
-		/*if (customerNumber != null) {
-			return customers.get(customerNumber);
-		}
-		return null;*/
 	}
 
-	public void läggTillKund(Customer customer) {
+	public void addCustomer(Customer customer) {
 		customers.put(customer.getCustomerNumber(), customer); 
 	}
 
@@ -37,5 +30,13 @@ public class CustomerRegister {
 			return c;
 		}
 		return null;
+	}
+	
+	public HashMap<String, Customer> customersInRegister() {
+		
+		for(Customer c : customers.values()) {
+			customers.put(c.getCustomerNumber(), c);
+			
+		} return customers;
 	}
 }
