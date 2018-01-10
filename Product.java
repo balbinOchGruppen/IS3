@@ -6,7 +6,7 @@ public class Product {
 	private String category;
 	private int price;
 	private int amountOfCopies;
-	private int amount = 0;
+	//private int amount = 0;
 	private HashMap<String, OrderLine> orderLines = new HashMap<String, OrderLine>();
 	private HashMap<String, Copy> copies = new HashMap<String, Copy>();
 	private ProductRegister productRegister;
@@ -43,13 +43,13 @@ public class Product {
 		return this.amountOfCopies;
 	}
 	
-	public void setAmount(int amount) {
+	/*public void setAmount(int amount) {
 		this.amount = amount;
 	}
 	
 	public int getAmount() {
 		return this.amount;
-	}
+	}*/
 
 	public void setOrderLine(HashMap<String, OrderLine> orderLines) {
 		this.orderLines = orderLines;
@@ -86,9 +86,10 @@ public class Product {
 	public void addCopy(Copy copy) {
 		this.copies.put(copy.getSerialnumber(), copy);
 //Increases the amount of copies of a product by one and add them to a product stock.
-		this.amount += 1;
-		this.setAmountOfCopies(amount);
-		this.setAmount(amount);
+		//this.amount += 1;
+		//this.setAmountOfCopies(amount);
+		//this.setAmount(amount);
+		this.amountOfCopies += 1;
 	}
 //A method to remove a copy of a product from the product.
 	public Copy removeCopy(String serialNumber) {

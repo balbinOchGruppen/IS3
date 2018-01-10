@@ -53,14 +53,16 @@ public class Order {
 //A method that calculates the total sum for a specific order.
 	public double calculateSum() {
 		double totalSum = 0;
-		Order or = customer.findOrder(orderID);
-		if(or != null) {
-			
+//		Order or = customer.findOrder(orderID);
+		//if(or != null) {
 		   for(OrderLine o : this.orderLines.values()) {
+			   System.out.println("For-sats: " + o);
 			   if(o.getProduct() != null) {
+				   System.out.println("Product (if):" + o.getProduct().getName()); 
 				   totalSum += o.calculateOrderLine();
 			   }  
 		   } 
-		} return totalSum;
+		//} 
+		   return totalSum;
     }
 } 

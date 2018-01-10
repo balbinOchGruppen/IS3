@@ -110,6 +110,7 @@ public class Applikation {
 		frame.getContentPane().add(textPane);
 		textPane.setEditable(false);
 
+		// 
 		JButton btnCreatCustomer = new JButton("Skapa");
 		btnCreatCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -586,16 +587,18 @@ public class Applikation {
 				else if (controller.fetchOrderLine(orderID, customerNbr).containsValue(ol)) {
 					messageBox.setText("En orderrad med ordernummer " + orderLineNbr + " finns redan på ordern.");
 				}
-				/*else if (!controller.product.getName().equals(productName)) {
+				else if (!controller.pReg.getProducts().keySet().contains(productName)) {
 					messageBox.setText("Den valda produkten finns inte i produktregistret.");
-					
-				}*/
-				int amount = Integer.parseInt(stringAmount);
-				if (amount > controller.getAmountOfCopies(productName)) {
+				}
+				//int amount = Integer.parseInt(stringAmount);
+				else if (Integer.parseInt(stringAmount) > controller.getAmountOfCopies(productName)) {
 					messageBox.setText("Det finns inte tillräckligt med exemplar av den valda produkten i registret.");
 				}
 				else {
-					controller.addOrderLine(orderLineNbr, productName, amount, orderID, customerNbr);
+					int amount = Integer.parseInt(stringAmount);
+					p.setAmountOfCopies(p.getAmountOfCopies() - amount);
+					controller.addOrderLine(orderLineNbr, productName, amount, orderID, customerNbr, p);
+					
 					messageBox.setText("Orderraden är tillagd till ordern");
 					txtOrderID.setText("");
 					txtOrderLineNbr.setText("");

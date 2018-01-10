@@ -82,16 +82,18 @@ public class Controller {
 	}
 /*A method that connects the addOrderLine method in the order class to the application window and creates
 a two way connection between the order and an order line.*/
-	public void addOrderLine(String number, String productName, int amount, String orderID, String customerNbr) {
+	public void addOrderLine(String number, String productName, int amount, String orderID, String customerNbr, Product product) {
 		OrderLine orderLine = new OrderLine();
 		orderLine.setNumber(number);
 		orderLine.setProductName(productName);
 		orderLine.setAmount(amount);
+		orderLine.addProduct(product);
 		
 		Customer c = cReg.findCustomer(customerNbr);
 		Order o = c.findOrder(orderID);
 		o.addOrderLine(orderLine);
 		orderLine.setOrder(o);
+		
 	}
 //A method that connects the findOrderLine method in the order class to the application window which returns a specific order line.
 	public OrderLine findOrderLine(String number, String orderID, String customerNbr) {
@@ -147,6 +149,7 @@ a two way connection between the order and an order line.*/
 		Product p = pReg.findProduct(productName);
 		if (p != null) {
 			p.removeCopy(serialNumber);
+			p.setAmountOfCopies(p.getAmountOfCopies() - 1);
 		}
 	}
 //A method that connects the fetchCopy method in the class product and returns the products copies to the application window.
@@ -166,6 +169,7 @@ a two way connection between the order and an order line.*/
 		product.setCategory(category);
 		product.setPrice(price);
 		pReg.addProduct(product);
+		System.out.print("In controller " + product.getPrice());
 	}
 //A method that connects the findProduct method in the product register to the application window and returns a product.
 	public Product findProduct(String name) {
